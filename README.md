@@ -39,4 +39,68 @@ Kibana is a data visualization and management tool for Elasticsearch that provid
 - **Elasticsearch comes with a wide set of features**: In addition to its speed, scalability, and resiliency, Elasticsearch has a number of powerful built-in features that make storing and searching data even more efficient, such as data rollups and index lifecycle management.
 
 - **The Elastic Stack simplifies data ingest, visualization, and reporting:**
-  ntegration with Beats and Logstash makes it easy to process data before indexing into Elasticsearch. And Kibana provides real-time visualization of Elasticsearch. APM - Application performance monitoring.
+  Integration with Beats and Logstash makes it easy to process data before indexing into Elasticsearch. And Kibana provides real-time visualization of Elasticsearch. APM - Application performance monitoring.
+
+### Installation
+
+1. Install elastc search with docker image
+   `docker pull docker.elastic.co/elasticsearch/elasticsearch:8.5.1`
+
+2. Create a new docker network for Elasticsearch and Kibana.
+   `docker network create elastic`
+
+3. Run docker container to start elastic search
+   `docker run --name elasticsearch --net elastic -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" -t docker.elastic.co/elasticsearch/elasticsearch:8.5.1`
+
+4. Kibana installation docker - Data visualization tool
+   `docker pull docker.elastic.co/kibana/kibana:8.5.1`
+
+5. Run kibana docker container in same network
+   `docker run --name kibana --net elastic -p 5601:5601 docker.elastic.co/kibana/kibana:8.5.1`
+   Use the username and password, enrollment token to open the kibana in browser.
+
+### Store data in elastic search
+
+You can access the elastic search through the http API calls.
+
+Each API call must be attached with .crt key which is used for TLS security and Authrorization header with username and password.
+
+### API's
+
+**CREATE Index**
+**POST /customer/\_doc/1**
+This request automatically creates the customer index if it doesn’t exist, adds a new document that has an ID of 1, and stores and indexes the firstname and lastname fields.
+
+**GET Index**
+**GET /customer/\_doc/keAnkIQBBPPZ64-e8g9z**
+Get the index by \_id
+
+**Bulk Write**
+**PUT /customer/\_bulk**
+
+```javascript
+{ "create": { } }
+{ "firstName": "Monica","lastName":"Rambeau"}
+
+{ "create": { } }
+{ "firstName": "Carol","lastName":"Danvers"}
+
+{ "create": { } }
+{ "firstName": "Wanda","lastName":"Maximoff"}
+
+{ "create": { } }
+{ "firstName": "Jennifer","lastName":"Takeda"}
+
+
+```
+
+**Search Query**
+**GET customer/\_search**
+
+```
+{
+  "query" : {
+    "match" : { "firstname": "Jennifer" }
+  }
+}
+```
