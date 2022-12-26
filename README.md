@@ -41,6 +41,8 @@ Kibana is a data visualization and management tool for Elasticsearch that provid
 - **The Elastic Stack simplifies data ingest, visualization, and reporting:**
   Integration with Beats and Logstash makes it easy to process data before indexing into Elasticsearch. And Kibana provides real-time visualization of Elasticsearch. APM - Application performance monitoring.
 
+---
+
 ### Installation
 
 1. Install elastc search with docker image
@@ -59,21 +61,40 @@ Kibana is a data visualization and management tool for Elasticsearch that provid
    `docker run --name kibana --net elastic -p 5601:5601 docker.elastic.co/kibana/kibana:8.5.1`
    Use the username and password, enrollment token to open the kibana in browser.
 
-### Store data in elastic search
+---
+
+### TLS security.
 
 You can access the elastic search through the http API calls.
 
 Each API call must be attached with .crt key which is used for TLS security and Authrorization header with username and password.
 
-### API's
+---
+
+### Mapping -
+
+Mapping is the outline of the documents stored in an index. Similar to database schema before inserting any data to database.
+
+---
+
+### Elastic search basic API's
 
 **CREATE Index**
+
 **POST /customer/\_doc/1**
 This request automatically creates the customer index if it doesn’t exist, adds a new document that has an ID of 1, and stores and indexes the firstname and lastname fields.
 
+---
+
 **GET Index**
-**GET /customer/\_doc/keAnkIQBBPPZ64-e8g9z**
+
+**GET /customer/\_doc/{\_id}**
 Get the index by \_id
+
+GET Projection
+**GET /customer/\_doc/{\_id}?\_source_includes={field}**
+
+---
 
 **Bulk Write**
 **PUT /customer/\_bulk**
@@ -91,7 +112,39 @@ Get the index by \_id
 { "create": { } }
 { "firstName": "Jennifer","lastName":"Takeda"}
 
+```
 
+---
+
+**DELETE DOC**
+**/customer/\_doc/2**
+
+---
+
+Note: Explore all aggregation options available in queries
+
+---
+
+### Index API
+
+**Create Index with config**
+
+```
+PUT {index}
+{
+  "settings" : {
+      "index" : {
+         "number_of_shards" : 3,
+         "number_of_replicas" : 2
+      }
+   }
+}
+```
+
+### Delete Index
+
+```
+DELETE /{index}
 ```
 
 **Search Query**
@@ -104,3 +157,25 @@ Get the index by \_id
   }
 }
 ```
+
+---
+
+### Elastic search Text search fundamentals.
+
+**The building blocks of any searchengine are tokenizers, token-filters and analyzers**
+
+**Tokenizers**
+Tokenization is a process of breaking the strings into sections of strings or terms called tokens based on a certain rule.
+
+**Token Filters**
+Token filters operate on tokens produced from tokenizers and modify the tokens accordingly.
+Ex: Lower case conversion
+
+**Analyzer**
+Analyzer is a combination of tokenizer and filters that can be applied to any field for analyzing in Elasticsearch. There are already built in analyzers available in Elasticsearch.
+
+### Text Analysis
+
+Elasticsearch performs text analysis when indexing or searching text fields.
+
+If your index doesn’t contain text fields, no further setup is needed; you can skip the pages in this section.
