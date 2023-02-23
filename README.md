@@ -160,7 +160,25 @@ DELETE /{index}
 
 ---
 
-### Elastic search Text search fundamentals.
+### Mapping.
+
+Mapping defines the schema to record the doc in an index.
+
+1. Create mapping.
+2. Add new field to existing mappings.
+3. Get view of mappings.
+
+### Text Analysis
+
+Elasticsearch performs text analysis when indexing or searching text fields.
+
+1. Tokenization - Breaking text into small chunk
+
+2. Normalization - To normalize the base term and with synonymous meaning can match
+
+**Text analysis is performed by analyzer.**
+
+Default analyzer is **standard analyzer**
 
 **The building blocks of any searchengine are tokenizers, token-filters and analyzers**
 
@@ -173,9 +191,3 @@ Ex: Lower case conversion
 
 **Analyzer**
 Analyzer is a combination of tokenizer and filters that can be applied to any field for analyzing in Elasticsearch. There are already built in analyzers available in Elasticsearch.
-
-### Text Analysis
-
-Elasticsearch performs text analysis when indexing or searching text fields.
-
-If your index doesn’t contain text fields, no further setup is needed; you can skip the pages in this section.
