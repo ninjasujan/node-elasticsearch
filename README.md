@@ -79,14 +79,6 @@ Mapping is the outline of the documents stored in an index. Similar to database 
 
 ### Elastic search basic API's
 
-**CREATE Index**
-
-When createing index we can specify the following.
-
-1. Settings for the index.
-2. Mapping field in the index.
-3. Index alias
-
 **POST /customer/\_doc/1**
 This request automatically creates the customer index if it doesn’t exist, adds a new document that has an ID of 1, and stores and indexes the firstname and lastname fields.
 
@@ -115,7 +107,25 @@ This request automatically creates the customer index if it doesn’t exist, add
 
 ### Index API
 
+CREATE Index
+
+```
+PUT colleges
+```
+
+When createing index we can specify the following.
+
+1. Settings for the index.
+2. Mapping field in the index.
+3. Index alias.
+
 Create Index with config
+
+GET Index
+
+```
+GET colleges
+```
 
 ```
 PUT {index}
@@ -235,6 +245,72 @@ GET Projection
 
 ```
 GET /customer/_doc/{_id}?_source_includes={field}
+```
+
+Match All
+
+```
+POST school/_search
+{
+  "query": {
+    "match_all":{}
+  }
+}
+```
+
+**Full text search**
+
+Match query
+
+```
+POST /schools*/_search
+{
+   "query":{
+      "match" : {
+         "rating":"4.5"
+      }
+   }
+}
+```
+
+```
+POST /products/_search
+{
+   "query":{
+      "query_string":{
+         "query":"Redmi"
+      }
+   }
+}
+```
+
+**Term Level Queries**
+
+To match structured data like number, enum and date
+
+```
+POST /products/_search
+{
+   "query":{
+      "term":{"qty":10}
+   }
+}
+```
+
+**Range Query**
+
+```
+POST /products/_search
+{
+  "query":{
+      "range":{
+         "qty":{
+            "gte":5
+            "lte": 20
+         }
+      }
+   }
+}
 ```
 
 ---
