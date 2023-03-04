@@ -81,22 +81,19 @@ Mapping is the outline of the documents stored in an index. Similar to database 
 
 **CREATE Index**
 
+When createing index we can specify the following.
+
+1. Settings for the index.
+2. Mapping field in the index.
+3. Index alias
+
 **POST /customer/\_doc/1**
 This request automatically creates the customer index if it doesn’t exist, adds a new document that has an ID of 1, and stores and indexes the firstname and lastname fields.
 
 ---
 
-**GET Index**
+### Bulk Write
 
-**GET /customer/\_doc/{\_id}**
-Get the index by \_id
-
-GET Projection
-**GET /customer/\_doc/{\_id}?\_source_includes={field}**
-
----
-
-**Bulk Write**
 **PUT /customer/\_bulk**
 
 ```javascript
@@ -116,18 +113,9 @@ GET Projection
 
 ---
 
-**DELETE DOC**
-**/customer/\_doc/2**
-
----
-
-Note: Explore all aggregation options available in queries
-
----
-
 ### Index API
 
-**Create Index with config**
+Create Index with config
 
 ```
 PUT {index}
@@ -141,14 +129,93 @@ PUT {index}
 }
 ```
 
+Create Index Mapping
+
+```
+PUT products
+{
+"mappings": {
+    "properties": {
+      "title": { "type": "text" },
+      "description": {"type": "text"},
+      "qty": {"type": "integer"},
+      "price": {"type": "double"}
+    }
+  }
+}
+```
+
+Insert data to index
+
+```
+POST products/_doc/1
+{
+  "title": "Redmi Watch",
+  "description": "Redmi fitness band to track heart beat, and blood presure",
+  "qty": 10,
+  "price": 5000
+}
+```
+
+Automatic index and underplaying mapping can be blocked by changing elasticsearch.yml config
+
+```
+action.auto_create_index:false
+index.mapper.dynamic:false
+```
+
+GET all docs
+
+```
+GET products/_search
+```
+
+GET DOC by ID
+
+```
+GET products/_doc/1
+```
+
+Paginated search result
+
+```
+GET products/_search
+{
+  "from": 0,
+  "size": 2
+}
+```
+
+Update DOC elstic search
+
+```
+GET products/_update/1
+{
+   "script" : {
+      "source": "ctx._source.title = params.title",
+      "lang": "painless",
+      "params" : {
+         "title" : "Samsung S20 FE 5G"
+      }
+   }
+ }
+```
+
+Delete DOC
+
+```
+DELETE products/_doc/4
+```
+
 ### Delete Index
 
 ```
 DELETE /{index}
 ```
 
-**Search Query**
-**GET customer/\_search**
+### Search Query
+
+GET customer/\_search
 
 ```
 {
@@ -156,6 +223,18 @@ DELETE /{index}
     "match" : { "firstname": "Jennifer" }
   }
 }
+```
+
+Match all doc in all index which contains given title
+
+```
+GET /_all/_search?q=title:Samsung S20 FE 5G
+```
+
+GET Projection
+
+```
+GET /customer/_doc/{_id}?_source_includes={field}
 ```
 
 ---
@@ -170,6 +249,7 @@ Mapping defines the schema to record the doc in an index.
 
 ### Text Analysis
 
+Text analysis is the process of converting unstructured text, like the body of an email or a product description, into a structured format that’s optimized for search.
 Elasticsearch performs text analysis when indexing or searching text fields.
 
 1. Tokenization - Breaking text into small chunk
@@ -191,3 +271,7 @@ Ex: Lower case conversion
 
 **Analyzer**
 Analyzer is a combination of tokenizer and filters that can be applied to any field for analyzing in Elasticsearch. There are already built in analyzers available in Elasticsearch.
+
+```
+
+```
