@@ -323,6 +323,25 @@ Mapping defines the schema to record the doc in an index.
 2. Add new field to existing mappings.
 3. Get view of mappings.
 
+```
+PUT account
+{
+  "mappings": {
+    "properties": {
+      "name": {"type": "text"},
+      "accountNumber": {"type": "text"},
+      "balance": {"type": "double"},
+      "description": {
+        "type": "text"
+      },
+      "type": {
+        "type": "text"
+      }
+    }
+  }
+}
+```
+
 ### Text Analysis
 
 Text analysis is the process of converting unstructured text, like the body of an email or a product description, into a structured format that’s optimized for search.
@@ -348,6 +367,32 @@ Ex: Lower case conversion
 **Analyzer**
 Analyzer is a combination of tokenizer and filters that can be applied to any field for analyzing in Elasticsearch. There are already built in analyzers available in Elasticsearch.
 
-```
+Checking standard analyzer.
 
 ```
+POST _analyze
+{
+   "analyzer": "standard",
+   "text": "Today's weather is beautiful"
+}
+```
+
+Configuring the Standard analyzer
+
+```
+PUT index_1_analysis
+{
+   "settings": {
+      "analysis": {
+         "analyzer": {
+            "my_english_analyzer": {
+               "type": "standard",
+               "stopwords": "_english_"
+            }
+         }
+      }
+   }
+}
+```
+
+The above configuration creates standard analyzer with english stop word.
